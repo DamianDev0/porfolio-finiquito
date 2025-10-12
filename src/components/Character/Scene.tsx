@@ -58,33 +58,52 @@ const Scene: React.FC = () => {
     let screenLight: THREE.Object3D | null = null;
     let mixer: THREE.AnimationMixer | null = null;
 
+    // Set initial loading progress
+    setLoading(10);
+
     // --- Cargar personaje ---
-    loadCharacter().then((gltf) => {
-      if (gltf) {
-        const animations = setAnimations(gltf);
-        if (hoverDivRef.current) animations.hover(gltf, hoverDivRef.current);
+    loadCharacter((progress) => {
+      setLoading(progress);
+    })
+      .then((gltf) => {
+        if (gltf) {
+          setLoading(50); // Model loaded, now setting up animations
+          
+          const animations = setAnimations(gltf);
+          if (hoverDivRef.current) animations.hover(gltf, hoverDivRef.current);
 
-        mixer = animations.mixer;
-        const loadedCharacter = gltf.scene;
-        setChar(loadedCharacter);
-        scene.add(loadedCharacter);
+          mixer = animations.mixer;
+          const loadedCharacter = gltf.scene;
+          setChar(loadedCharacter);
+          scene.add(loadedCharacter);
 
-        headBone = loadedCharacter.getObjectByName("spine006") || null;
-        screenLight = loadedCharacter.getObjectByName("screenlight") || null;
+          headBone = loadedCharacter.getObjectByName("spine006") || null;
+          screenLight = loadedCharacter.getObjectByName("screenlight") || null;
 
-        // Una vez que el modelo se carga correctamente, marcamos la carga como completada
-        setLoading(100);
+          setLoading(80); // Animations set up
+          
+          setTimeout(() => {
+            setLoading(90); // About to finish
+            light.turnOnLights();
+            animations.startIntro();
+            
+            setTimeout(() => {
+              setLoading(100); // Everything completed
+            }, 500);
+          }, 1000);
 
+          window.addEventListener("resize", () =>
+            handleResize(renderer, camera, canvasDiv, loadedCharacter)
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to load character:", error);
+        // Even if model loading fails, complete the loading to prevent infinite loading
         setTimeout(() => {
-          light.turnOnLights();
-          animations.startIntro();
-        }, 2500);
-
-        window.addEventListener("resize", () =>
-          handleResize(renderer, camera, canvasDiv, loadedCharacter)
-        );
-      }
-    });
+          setLoading(100);
+        }, 2000);
+      });
 
     // --- Movimiento ---
     let mouse = { x: 0, y: 0 };

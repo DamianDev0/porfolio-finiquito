@@ -4,7 +4,6 @@ import {
   createContext,
   PropsWithChildren,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -20,7 +19,12 @@ export const LoadingContext = createContext<LoadingType | null>(null);
 
 export const LoadingProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [loading, setLoading] = useState(0);
+  const [loadingPercent, setLoadingPercent] = useState(0);
+
+  // Create a wrapper function that updates the loading percentage
+  const setLoading = (percent: number) => {
+    setLoadingPercent(percent);
+  };
 
   const value = useMemo(
     () => ({
@@ -28,13 +32,12 @@ export const LoadingProvider = ({ children }: PropsWithChildren) => {
       setIsLoading,
       setLoading,
     }),
-    [isLoading, setIsLoading, setLoading]
+    [isLoading]
   );
-  useEffect(() => {}, [loading]);
 
   return (
     <LoadingContext.Provider value={value as LoadingType}>
-      {isLoading && <Loading percent={loading} />}
+      {isLoading && <Loading percent={loadingPercent} />}
       <main className="main-body">{children}</main>
     </LoadingContext.Provider>
   );

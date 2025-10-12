@@ -15,12 +15,10 @@ import SocialIcons from "./SocialIcons";
 import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "../utils/splitText";
-import { useLoading } from "@/contexts/LoadingProvider";
 
 const TechStack = lazy(() => import("./TechStack"));
 
 const MainContainer = ({ children }: PropsWithChildren) => {
-  const { setLoading } = useLoading();
   const [isDesktopView, setIsDesktopView] = useState<boolean>(() => {
     if (typeof window === "undefined") {
       return true;
@@ -36,18 +34,29 @@ const MainContainer = ({ children }: PropsWithChildren) => {
     const resizeHandler = () => {
       setSplitText();
       setIsDesktopView(window.innerWidth > 1024);
+      
+      // Refresh ScrollTrigger after layout changes
+      const { ScrollTrigger } = require("gsap/ScrollTrigger");
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
     };
+    
     resizeHandler();
     window.addEventListener("resize", resizeHandler);
+    
+    // Initial ScrollTrigger refresh after component mount
+    setTimeout(() => {
+      const { ScrollTrigger } = require("gsap/ScrollTrigger");
+      ScrollTrigger.refresh();
+    }, 500);
+    
     return () => {
       window.removeEventListener("resize", resizeHandler);
     };
   }, []);
 
-  useEffect(() => {
-    // Temporarily mark the loading sequence as complete while the 3D scene is disabled.
-    setLoading(100);
-  }, [setLoading]);
+  // Remove the immediate setLoading(100) - let the Character component handle loading
 
   return (
     <div className="container-main min-h-[var(--vh)]">

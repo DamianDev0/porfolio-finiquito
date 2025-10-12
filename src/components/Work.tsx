@@ -44,18 +44,48 @@ const Work = () => {
 
       const createTimeline = () => {
         const translateX = computeTranslateX();
+        
+        // Temporarily disable complex animations to prevent scroll issues
+        // Use a simpler approach that doesn't interfere with native scroll
         const timeline = gsap.timeline({
           scrollTrigger: {
             id: "work",
             trigger: container,
-            start: "top top",
-            end: `+=${translateX}`,
-            scrub: true,
-            pin: true,
+            start: "top 80%",
+            end: "bottom 20%",
+            scrub: false, // Disable scrub to avoid scroll conflicts
+            pin: false,
+            invalidateOnRefresh: true,
+            onEnter: () => {
+              gsap.to("[data-work-flex]", { 
+                x: -translateX * 0.3, 
+                duration: 2,
+                ease: "power2.out" 
+              });
+            },
+            onLeave: () => {
+              gsap.to("[data-work-flex]", { 
+                x: -translateX * 0.5, 
+                duration: 1,
+                ease: "power2.out" 
+              });
+            },
+            onEnterBack: () => {
+              gsap.to("[data-work-flex]", { 
+                x: -translateX * 0.3, 
+                duration: 1,
+                ease: "power2.out" 
+              });
+            },
+            onLeaveBack: () => {
+              gsap.to("[data-work-flex]", { 
+                x: 0, 
+                duration: 1,
+                ease: "power2.out" 
+              });
+            }
           },
         });
-
-        timeline.to("[data-work-flex]", { x: -translateX, ease: "none" });
 
         return timeline;
       };
@@ -63,34 +93,39 @@ const Work = () => {
       let timeline = createTimeline();
 
       const handleResize = () => {
-        timeline.kill();
+        timeline?.kill();
         ScrollTrigger.getById("work")?.kill();
-        timeline = createTimeline();
+        // Add a small delay to ensure proper cleanup
+        setTimeout(() => {
+          timeline = createTimeline();
+        }, 100);
       };
 
       window.addEventListener("resize", handleResize);
 
       return () => {
         window.removeEventListener("resize", handleResize);
-        timeline.kill();
+        timeline?.kill();
         ScrollTrigger.getById("work")?.kill();
+        // Refresh ScrollTrigger to clean up any remaining triggers
+        ScrollTrigger.refresh();
       };
     }, []);
 
   return (
     <section
-      className="work-section relative h-[var(--vh)] w-full overflow-hidden"
+      className="work-section relative min-h-[var(--vh)] w-full overflow-hidden"
       id="work"
     >
       <div
-        className="section-container relative mx-auto flex h-full flex-col"
+        className="section-container relative mx-auto flex min-h-full flex-col py-20"
         data-work-container
       >
         <h2 className="title mt-[100px] text-[70px] font-medium uppercase tracking-tight text-white max-[1400px]:text-[50px] max-[900px]:text-[40px]">
           My <span className="text-[var(--accentColor)]">Work</span>
         </h2>
         <div
-          className="work-flex relative mt-12 flex h-full w-full -translate-x-20 gap-0 pr-[120px] before:absolute before:left-1/2 before:top-0 before:h-px before:w-[50000vw] before:-translate-x-1/2 before:bg-[#363636] after:absolute after:left-1/2 after:top-full after:h-px after:w-[50000vw] after:-translate-x-1/2 after:bg-[#363636] max-[1400px]:-translate-x-[30px] max-[1400px]:pr-[45px]"
+          className="work-flex relative mt-12 flex min-h-[60vh] w-full -translate-x-20 gap-0 pr-[120px] before:absolute before:left-1/2 before:top-0 before:h-px before:w-[50000vw] before:-translate-x-1/2 before:bg-[#363636] after:absolute after:left-1/2 after:top-full after:h-px after:w-[50000vw] after:-translate-x-1/2 after:bg-[#363636] max-[1400px]:-translate-x-[30px] max-[1400px]:pr-[45px]"
           data-work-flex
         >
           {items.map((item, index) => (

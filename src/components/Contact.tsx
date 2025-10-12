@@ -8,7 +8,7 @@ const socials = [
 const Contact = () => {
   return (
     <div
-      className="section-container mx-auto mt-[100px] pb-[100px] max-[900px]:mt-[50px] max-[900px]:pb-[50px]"
+      className="section-container mx-auto mt-[200px] pb-[100px] max-[900px]:mt-[100px] max-[900px]:pb-[50px]"
       id="contact"
     >
       <div className="w-full max-[900px]:w-[calc(100%-25px)]">
