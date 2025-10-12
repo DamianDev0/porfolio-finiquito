@@ -1,7 +1,11 @@
-export default function Home() {
-  return (
-    <div>
-      <h1>Hola Gonorreas</h1>
-    </div>
-  );
+"use client";
+
+import dynamic from "next/dynamic";
+
+const MainContainer = dynamic(() => import("@/components/MainContainer"), {
+  ssr: false,
+});
+
+export default function ClientHome() {
+  return <MainContainer />;
 }

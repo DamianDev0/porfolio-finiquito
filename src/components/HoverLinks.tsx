@@ -1,10 +1,12 @@
-import "./styles/style.css";
-
 const HoverLinks = ({ text, cursor }: { text: string; cursor?: boolean }) => {
   return (
-    <div className="hover-link" data-cursor={!cursor && `disable`}>
-      <div className="hover-in">
-        {text} <div>{text}</div>
+    <div
+      className="group relative flex overflow-hidden whitespace-nowrap"
+      data-cursor={!cursor && `disable`}
+    >
+      <div className="relative transition duration-300 group-hover:-translate-y-full group-hover:text-[var(--accentColor)]">
+        {text}
+        <div className="absolute left-0 top-full flex">{text}</div>
       </div>
     </div>
   );

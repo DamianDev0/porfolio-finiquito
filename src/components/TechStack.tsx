@@ -128,27 +128,48 @@ const TechStack = () => {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
+    const workSection = document.getElementById("work");
+    if (!workSection) {
+      return;
+    }
+
     const handleScroll = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      const threshold = document
-        .getElementById("work")!
-        .getBoundingClientRect().top;
+      const threshold = workSection.getBoundingClientRect().top;
       setIsActive(scrollY > threshold);
     };
-    document.querySelectorAll(".header a").forEach((elem) => {
-      const element = elem as HTMLAnchorElement;
-      element.addEventListener("click", () => {
-        const interval = setInterval(() => {
-          handleScroll();
-        }, 10);
-        setTimeout(() => {
-          clearInterval(interval);
+
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>(
+      '[data-nav-link="true"]'
+    );
+
+    const cleanupTimers: number[] = [];
+    const navListeners: Array<[
+      HTMLAnchorElement,
+      (event: MouseEvent) => void
+    ]> = [];
+
+    navLinks.forEach((element) => {
+      const onClick = () => {
+        const interval = window.setInterval(handleScroll, 10);
+        cleanupTimers.push(interval);
+        window.setTimeout(() => {
+          window.clearInterval(interval);
         }, 1000);
-      });
+      };
+      element.addEventListener("click", onClick);
+      navListeners.push([element, onClick]);
     });
+
     window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      navListeners.forEach(([element, listener]) => {
+        element.removeEventListener("click", listener);
+      });
+      cleanupTimers.forEach((timer) => window.clearInterval(timer));
     };
   }, []);
   const materials = useMemo(() => {
@@ -167,15 +188,17 @@ const TechStack = () => {
   }, []);
 
   return (
-    <div className="techstack">
-      <h2> My Techstack</h2>
+    <div className="techstack relative mx-auto mt-12 h-[var(--vh)] w-full max-w-[var(--cMaxWidth)]">
+      <h2 className="absolute left-0 top-[120px] w-full text-center text-[80px] font-normal uppercase tracking-wide text-white max-[900px]:text-[40px]">
+        My Techstack
+      </h2>
 
       <Canvas
         shadows
         gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
         camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
         onCreated={(state) => (state.gl.toneMappingExposure = 1.5)}
-        className="tech-canvas"
+        className="h-full w-full"
       >
         <ambientLight intensity={1} />
         <spotLight
