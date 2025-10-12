@@ -55,7 +55,7 @@ const Navbar = () => {
           className="font-semibold tracking-[0.2px] text-sm min-[500px]:text-base min-[1200px]:text-lg"
           data-cursor="disable"
         >
-          Logo
+          Damian
         </Link>
         <a
           href="mailto:example@mail.com"

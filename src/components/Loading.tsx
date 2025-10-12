@@ -1,26 +1,34 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
 import { useLoading } from "@/contexts/LoadingProvider";
 
-export const setProgress = { fn: (value: number) => {} };
-
-const Loading = ({ percent }: { percent: number }) => {
+const Loading = () => {
   const { setIsLoading } = useLoading();
   const [isLoaded, setIsLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [progress, setProgressState] = useState<number>(0);
 
-  // Update progress when percent prop changes
   useEffect(() => {
-    setProgressState(percent);
-  }, [percent]);
+    const interval = window.setInterval(() => {
+      setProgressState((prev) => {
+        if (prev >= 100) {
+          window.clearInterval(interval);
+          return 100;
+        }
 
-  useEffect(() => {
-    setProgress.fn = (value: number) => {
-      setProgressState(value);
+        const next = Math.min(prev + Math.random() * 18 + 6, 100);
+        if (next >= 100) {
+          window.clearInterval(interval);
+        }
+        return Math.floor(next);
+      });
+    }, 220);
+
+    return () => {
+      window.clearInterval(interval);
     };
   }, []);
 
