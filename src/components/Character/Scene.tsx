@@ -72,8 +72,8 @@ const Scene: React.FC = () => {
         headBone = loadedCharacter.getObjectByName("spine006") || null;
         screenLight = loadedCharacter.getObjectByName("screenlight") || null;
 
-        // Indicador de carga (ejemplo)
-        setLoading(0);
+        // Una vez que el modelo se carga correctamente, marcamos la carga como completada
+        setLoading(100);
 
         setTimeout(() => {
           light.turnOnLights();
