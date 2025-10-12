@@ -4,10 +4,24 @@ import gsap from "gsap";
 import SplitType from "split-type";
 
 export function initialFX() {
-
+  // Clean up any existing ScrollTriggers to prevent conflicts
+  const { ScrollTrigger } = require("gsap/ScrollTrigger");
+  ScrollTrigger.killAll();
+  
   document.body.style.overflowY = "auto";
   const main = document.getElementsByTagName("main")[0];
   if (main) main.classList.add("main-active");
+  
+  // Refresh ScrollTrigger after enabling scroll and UI changes
+  setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 100);
+
+  // Smooth scroller temporarily disabled for testing
+  // const { smoother } = require("../components/Navbar");
+  // if (smoother) {
+  //   smoother.paused(false);
+  // }
 
   gsap.to("body", {
     backgroundColor: "#0b080c",

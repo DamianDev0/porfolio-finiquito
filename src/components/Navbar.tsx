@@ -10,18 +10,20 @@ export let smoother: ScrollSmoother;
 
 const Navbar = () => {
   useEffect(() => {
-    smoother = ScrollSmoother.create({
-      wrapper: "#smooth-wrapper",
-      content: "#smooth-content",
-      smooth: 1.7,
-      speed: 1.7,
-      effects: true,
-      autoResize: true,
-      ignoreMobileResize: true,
-    });
+    // Temporarily disable ScrollSmoother to test basic scrolling
+    // smoother = ScrollSmoother.create({
+    //   wrapper: "#smooth-wrapper",
+    //   content: "#smooth-content",
+    //   smooth: 1.7,
+    //   speed: 1.7,
+    //   effects: true,
+    //   autoResize: true,
+    //   ignoreMobileResize: true,
+    // });
 
-    smoother.scrollTop(0);
-    smoother.paused(true);
+    // smoother.scrollTop(0);
+    // Don't pause the smoother - allow scrolling
+    // smoother.paused(true);
 
     const links = document.querySelectorAll('[data-nav-link="true"]');
     links.forEach((elem) => {
@@ -31,13 +33,19 @@ const Navbar = () => {
           e.preventDefault();
           const elem = e.currentTarget as HTMLAnchorElement;
           const section = elem.getAttribute("data-href");
-          smoother.scrollTo(section, true, "top top");
+          // Temporarily use regular scrolling instead of smoother
+          const targetElement = document.querySelector(section || "");
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+          // smoother.scrollTo(section, true, "top top");
         }
       });
     });
-    window.addEventListener("resize", () => {
-      ScrollSmoother.refresh(true);
-    });
+    // Temporarily removed resize listener for ScrollSmoother
+    // window.addEventListener("resize", () => {
+    //   ScrollSmoother.refresh(true);
+    // });
   }, []);
   return (
     <>

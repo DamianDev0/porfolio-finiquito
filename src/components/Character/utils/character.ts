@@ -14,19 +14,22 @@ const setCharacter = (
   dracoLoader.setDecoderPath("/draco/");
   loader.setDRACOLoader(dracoLoader);
 
-  const loadCharacter = () => {
+  const loadCharacter = (onProgress?: (progress: number) => void) => {
     return new Promise<GLTF | null>(async (resolve, reject) => {
       try {
+        onProgress?.(20); // Starting decryption
         const encryptedBlob = await decryptFile(
           "/models/character.enc",
           "Character3D#@"
         );
+        onProgress?.(30); // Decryption complete
         const blobUrl = URL.createObjectURL(new Blob([encryptedBlob]));
 
         let character: THREE.Object3D;
         loader.load(
           blobUrl,
           async (gltf) => {
+            onProgress?.(40); // Model loaded, compiling
             character = gltf.scene;
             await renderer.compileAsync(character, camera, scene);
             character.traverse((child: any) => {
@@ -37,14 +40,21 @@ const setCharacter = (
                 mesh.frustumCulled = true;
               }
             });
-            resolve(gltf);
+            onProgress?.(45); // Setting up animations
             setCharTimeline(character, camera);
             setAllTimeline();
             character!.getObjectByName("footR")!.position.y = 3.36;
             character!.getObjectByName("footL")!.position.y = 3.36;
             dracoLoader.dispose();
+            resolve(gltf);
           },
-          undefined,
+          (progress) => {
+            // GLTF loading progress
+            if (progress.total > 0) {
+              const percent = Math.min(30 + (progress.loaded / progress.total) * 10, 40);
+              onProgress?.(percent);
+            }
+          },
           (error) => {
             console.error("Error loading GLTF model:", error);
             reject(error);

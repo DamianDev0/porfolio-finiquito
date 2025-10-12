@@ -6,6 +6,14 @@ const MainContainer = dynamic(() => import("@/components/MainContainer"), {
   ssr: false,
 });
 
+const CharacterModel = dynamic(() => import("@/components/Character"), {
+  ssr: false,
+});
+
 export default function ClientHome() {
-  return <MainContainer />;
+  return (
+    <MainContainer>
+      <CharacterModel />
+    </MainContainer>
+  );
 }

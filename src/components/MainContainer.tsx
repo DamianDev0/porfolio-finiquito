@@ -1,4 +1,10 @@
-import { lazy, PropsWithChildren, Suspense, useEffect, useState } from "react";
+import {
+  lazy,
+  PropsWithChildren,
+  Suspense,
+  useEffect,
+  useState,
+} from "react";
 import About from "./About";
 import Career from "./Career";
 import Contact from "./Contact";
@@ -28,13 +34,29 @@ const MainContainer = ({ children }: PropsWithChildren) => {
     const resizeHandler = () => {
       setSplitText();
       setIsDesktopView(window.innerWidth > 1024);
+      
+      // Refresh ScrollTrigger after layout changes
+      const { ScrollTrigger } = require("gsap/ScrollTrigger");
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
     };
+    
     resizeHandler();
     window.addEventListener("resize", resizeHandler);
+    
+    // Initial ScrollTrigger refresh after component mount
+    setTimeout(() => {
+      const { ScrollTrigger } = require("gsap/ScrollTrigger");
+      ScrollTrigger.refresh();
+    }, 500);
+    
     return () => {
       window.removeEventListener("resize", resizeHandler);
     };
   }, []);
+
+  // Remove the immediate setLoading(100) - let the Character component handle loading
 
   return (
     <div className="container-main min-h-[var(--vh)]">

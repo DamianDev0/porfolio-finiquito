@@ -11,7 +11,12 @@ const Loading = ({ percent }: { percent: number }) => {
   const { setIsLoading } = useLoading();
   const [isLoaded, setIsLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const [progress, setProgressState] = useState<number>(percent);
+  const [progress, setProgressState] = useState<number>(0);
+
+  // Update progress when percent prop changes
+  useEffect(() => {
+    setProgressState(percent);
+  }, [percent]);
 
   useEffect(() => {
     setProgress.fn = (value: number) => {
