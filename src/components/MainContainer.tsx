@@ -1,4 +1,10 @@
-import { lazy, PropsWithChildren, Suspense, useEffect, useState } from "react";
+import {
+  lazy,
+  PropsWithChildren,
+  Suspense,
+  useEffect,
+  useState,
+} from "react";
 import About from "./About";
 import Career from "./Career";
 import Contact from "./Contact";
@@ -9,10 +15,12 @@ import SocialIcons from "./SocialIcons";
 import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "../utils/splitText";
+import { useLoading } from "@/contexts/LoadingProvider";
 
 const TechStack = lazy(() => import("./TechStack"));
 
 const MainContainer = ({ children }: PropsWithChildren) => {
+  const { setLoading } = useLoading();
   const [isDesktopView, setIsDesktopView] = useState<boolean>(() => {
     if (typeof window === "undefined") {
       return true;
@@ -35,6 +43,11 @@ const MainContainer = ({ children }: PropsWithChildren) => {
       window.removeEventListener("resize", resizeHandler);
     };
   }, []);
+
+  useEffect(() => {
+    // Temporarily mark the loading sequence as complete while the 3D scene is disabled.
+    setLoading(100);
+  }, [setLoading]);
 
   return (
     <div className="container-main min-h-[var(--vh)]">
