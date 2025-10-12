@@ -9,16 +9,21 @@ const Cursor = () => {
   useEffect(() => {
     let hover = false;
     const cursor = cursorRef.current!;
+    if (!cursor) {
+      return;
+    }
     const mousePos = { x: 0, y: 0 };
     const cursorPos = { x: 0, y: 0 };
 
-   
-    document.addEventListener("mousemove", (e) => {
+    const handleMouseMove = (e: MouseEvent) => {
       mousePos.x = e.clientX;
       mousePos.y = e.clientY;
-    });
+    };
 
- 
+    document.addEventListener("mousemove", handleMouseMove);
+
+    let animationFrame = 0;
+
     const loop = () => {
       if (!hover) {
         const delay = 6;
@@ -27,15 +32,16 @@ const Cursor = () => {
 
         gsap.to(cursor, { x: cursorPos.x, y: cursorPos.y, duration: 0.1 });
       }
-      requestAnimationFrame(loop);
+      animationFrame = requestAnimationFrame(loop);
     };
-    requestAnimationFrame(loop);
+    animationFrame = requestAnimationFrame(loop);
 
+    const cleanups: Array<() => void> = [];
 
     document.querySelectorAll("[data-cursor]").forEach((item) => {
       const element = item as HTMLElement;
 
-      element.addEventListener("mouseover", (e: MouseEvent) => {
+      const onMouseOver = (e: MouseEvent) => {
         const target = e.currentTarget as HTMLElement;
         const rect = target.getBoundingClientRect();
 
@@ -49,21 +55,33 @@ const Cursor = () => {
         if (element.dataset.cursor === "disable") {
           cursor.classList.add("cursor-disable");
         }
-      });
+      };
 
-      element.addEventListener("mouseout", () => {
+      const onMouseOut = () => {
         cursor.classList.remove("cursor-disable", "cursor-icons");
         hover = false;
+      };
+
+      element.addEventListener("mouseover", onMouseOver);
+      element.addEventListener("mouseout", onMouseOut);
+
+      cleanups.push(() => {
+        element.removeEventListener("mouseover", onMouseOver);
+        element.removeEventListener("mouseout", onMouseOut);
       });
     });
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(animationFrame);
+      cleanups.forEach((cleanup) => cleanup());
+    };
   }, []);
 
   return (
     <div
       ref={cursorRef}
-      className="cursor-main fixed pointer-events-none z-[99] rounded-full mix-blend-difference bg-[#e6c3ff] shadow-[0_0_30px_0_rgb(175,131,255)] transition-all duration-300 ease-out
-      top-[-25px] left-[-25px] w-[var(--size)] h-[var(--size)]
-      sm:[--size:50px] [--size:0px]"
+      className="cursor-main fixed left-[-25px] top-[-25px] z-[99] h-[var(--size)] w-[var(--size)] pointer-events-none rounded-full bg-[#e6c3ff] mix-blend-difference shadow-[0_0_30px_0_rgb(175,131,255)] transition-all duration-300 ease-out [--size:0px] sm:[--size:50px]"
     ></div>
   );
 };
