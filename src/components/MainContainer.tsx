@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import {  Suspense, useEffect } from "react";
 import About from "./About";
 import Career from "./Career";
 import Contact from "./Contact";
@@ -10,7 +10,6 @@ import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "../utils/splitText";
 
-const TechStack = lazy(() => import("./TechStack"));
 
 const MainContainer = () => {
   useEffect(() => {
@@ -21,9 +20,7 @@ const MainContainer = () => {
     let scrollTriggerModule: typeof import("gsap/ScrollTrigger") | null = null;
 
     const loadScrollTrigger = async () => {
-      if (!scrollTriggerModule) {
-        scrollTriggerModule = await import("gsap/ScrollTrigger");
-      }
+      scrollTriggerModule ??= await import("gsap/ScrollTrigger");
 
       return scrollTriggerModule.ScrollTrigger;
     };
@@ -65,7 +62,7 @@ const MainContainer = () => {
             <Career />
             <Work />
             <Suspense fallback={<div>Loading....</div>}>
-              <TechStack />
+           
             </Suspense>
             <Contact />
           </div>

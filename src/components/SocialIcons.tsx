@@ -84,15 +84,7 @@ const SocialIcons = () => {
           </span>
         ))}
       </div>
-      <a
-        className="absolute bottom-10 right-0 flex origin-bottom-left -translate-x-full rotate-[-90deg] cursor-pointer items-center gap-2 text-[15px] font-semibold uppercase tracking-[4px] text-[#5e5e5e] transition-colors duration-500 hover:text-white min-[768px]:translate-x-0 min-[768px]:rotate-0 min-[768px]:text-[20px] min-[768px]:leading-[20px]"
-        href="#"
-      >
-        <HoverLinks text="RESUME" />
-        <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/40 text-[12px] text-white min-[768px]:h-8 min-[768px]:w-8 min-[768px]:text-[14px]">
-          CV
-        </span>
-      </a>
+    
     </div>
   );
 };
