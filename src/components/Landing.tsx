@@ -1,8 +1,45 @@
 "use client";
 
+import { useEffect } from "react";
+import gsap from "gsap";
 import PixelBlast from "./PixelBlast";
 
 const Landing = () => {
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reduceMotion.matches) {
+      const elements = document.querySelectorAll<HTMLElement>("[data-hero-animate]");
+      elements.forEach((element) => {
+        element.style.opacity = "1";
+        element.style.transform = "none";
+      });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      const elements = gsap.utils.toArray<HTMLElement>("[data-hero-animate]");
+      if (!elements.length) {
+        return;
+      }
+
+      gsap.set(elements, { autoAlpha: 0, y: 40 });
+      gsap.to(elements, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.12,
+        delay: 0.35,
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
       id="landingDiv"

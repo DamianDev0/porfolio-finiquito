@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -101,12 +103,14 @@ const Work = () => {
       className="work-section relative min-h-[var(--vh)] w-full overflow-hidden"
       data-work-section
       id="work"
+      data-section
     >
       <div
         className="section-container relative mx-auto flex min-h-full flex-col py-20"
         data-work-container
+        data-section-item
       >
-        <h2 className="title mt-[100px] text-[70px] font-medium uppercase tracking-tight text-white max-[1400px]:text-[50px] max-[900px]:text-[40px]">
+        <h2 className="title mt-[100px] text-[70px] font-medium uppercase tracking-tight text-white max-[1400px]:text-[50px] max-[900px]:text-[40px]" data-section-item>
           My <span className="text-[var(--accentColor)]">Work</span>
         </h2>
         <div
@@ -120,6 +124,7 @@ const Work = () => {
               <article
                 className="work-box flex w-[600px] shrink-0 flex-col gap-[50px] border-r border-[#363636] p-20 text-left transition-colors even:flex-col-reverse max-[1400px]:w-[350px] max-[1400px]:p-[30px] max-[1024px]:w-full max-[1024px]:border-r-0 max-[1024px]:border-b max-[1024px]:p-0 max-[1024px]:pb-12"
                 data-work-box
+                data-section-item
                 key={item.title}
               >
                 <div className="work-info flex flex-col gap-6">

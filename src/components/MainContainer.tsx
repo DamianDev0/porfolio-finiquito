@@ -1,4 +1,4 @@
-import {  Suspense, useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import About from "./About";
 import Career from "./Career";
 import Contact from "./Contact";
@@ -10,9 +10,12 @@ import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "../utils/splitText";
 import TechStack from "./TechStack";
+import useGsapSectionReveal from "@/hooks/useGsapSectionReveal";
 
 
 const MainContainer = () => {
+  useGsapSectionReveal();
+
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
