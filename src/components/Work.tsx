@@ -59,41 +59,48 @@ const Work = () => {
       return;
     }
 
-    gsap.set(track, { x: 0 });
+    const ctx = gsap.context(() => {
+      gsap.set(track, { x: 0 });
 
-    const mm = gsap.matchMedia();
+      const getScrollableDistance = () =>
+        Math.max(track.scrollWidth - section.offsetWidth, 0);
 
-    const context = mm.add("(min-width: 1024px)", () => {
-      const animation = gsap.to(track, {
-        x: () => {
-          const available = track.scrollWidth - window.innerWidth;
-          return available > 0 ? -available : 0;
-        },
-        ease: "none",
-        scrollTrigger: {
-          id: "work-horizontal",
-          trigger: section,
-          start: "top top",
-          end: () => `+=${Math.max(track.scrollWidth - window.innerWidth, 0)}`,
-          scrub: true,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
+      const mm = gsap.matchMedia();
+
+      const mmContext = mm.add("(min-width: 1024px)", () => {
+        const animation = gsap.to(track, {
+          x: () => -getScrollableDistance(),
+          ease: "none",
+          scrollTrigger: {
+            id: "work-horizontal",
+            trigger: section,
+            start: "top top",
+            end: () => `+=${getScrollableDistance()}`,
+            scrub: true,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        return () => {
+          animation.kill();
+        };
       });
 
+      const refreshTimeout = window.setTimeout(
+        () => ScrollTrigger.refresh(),
+        150,
+      );
+
       return () => {
-        animation.kill();
+        window.clearTimeout(refreshTimeout);
+        mmContext.revert();
+        ScrollTrigger.getById("work-horizontal")?.kill();
       };
-    });
+    }, section);
 
-    const refreshTimeout = window.setTimeout(() => ScrollTrigger.refresh(), 150);
-
-    return () => {
-      window.clearTimeout(refreshTimeout);
-      context.revert();
-      ScrollTrigger.getById("work-horizontal")?.kill();
-    };
+    return () => ctx.revert();
   }, []);
 
   return (

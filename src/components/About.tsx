@@ -2,14 +2,17 @@
 
 import dynamic from "next/dynamic";
 
-const Spline = dynamic(() => import("@splinetool/react-spline").then((m) => m.default), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-[400px] min-[1025px]:h-[80vh] w-full items-center justify-center text-[#c873ff]/80">
-      Loading 3D scene...
-    </div>
-  ),
-});
+const Spline = dynamic(
+  () => import("@splinetool/react-spline").then((m) => m.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-[400px] min-[1025px]:h-[80vh] w-full items-center justify-center text-[#c873ff]/80">
+        Loading 3D scene...
+      </div>
+    ),
+  }
+);
 
 const About = () => {
   return (
@@ -29,9 +32,8 @@ const About = () => {
           About Me
         </h3>
         <p className="text-md leading-6 font-extralight text-white/80">
-          I'm a multidisciplinary developer passionate about crafting immersive digital experiences
-          through code and design. I focus on modern technologies, performance, and user-centered
-          interfaces to turn complex ideas into simple, elegant, and meaningful products.
+          I&apos;m a multidisciplinary developer passionate about crafting
+          immersive digital experiences through code and design.
         </p>
       </div>
     </section>

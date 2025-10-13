@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import HoverLinks from "./HoverLinks";
 
 const socialLinks = [
   { label: "Github", url: "https://github.com", abbr: "GH" },
