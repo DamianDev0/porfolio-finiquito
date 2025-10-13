@@ -1,9 +1,10 @@
-import { useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import WorkImage from "./WorkImage";
+"use client";
 
-gsap.registerPlugin(ScrollTrigger);
+import { useEffect } from "react";
+import { gsap } from "gsap";
+import type { Context } from "gsap/gsap-core";
+import type { ScrollTriggerStatic } from "gsap/ScrollTrigger";
+import WorkImage from "./WorkImage";
 
 type WorkItem = {
   title: string;
@@ -48,59 +49,75 @@ const WORK_ITEMS: WorkItem[] = [
 
 const Work = () => {
   useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
+    let ctx: Context | undefined;
+    let mmContext: Context | undefined;
+    let refreshTimeout: number | undefined;
+    let scrollTriggerInstance: ScrollTriggerStatic | undefined;
 
-    const section = document.querySelector<HTMLElement>("[data-work-section]");
-    const track = section?.querySelector<HTMLElement>("[data-work-track]");
+    const init = async () => {
+      if (typeof window === "undefined") {
+        return;
+      }
 
-    if (!section || !track) {
-      return;
-    }
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+      scrollTriggerInstance = ScrollTrigger;
+      gsap.registerPlugin(ScrollTrigger);
 
-    const ctx = gsap.context(() => {
-      gsap.set(track, { x: 0 });
+      const section = document.querySelector<HTMLElement>(
+        "[data-work-section]",
+      );
+      const track = section?.querySelector<HTMLElement>("[data-work-track]");
 
-      const getScrollableDistance = () =>
-        Math.max(track.scrollWidth - section.offsetWidth, 0);
+      if (!section || !track) {
+        return;
+      }
 
-      const mm = gsap.matchMedia();
+      ctx = gsap.context(() => {
+        gsap.set(track, { x: 0 });
 
-      const mmContext = mm.add("(min-width: 1024px)", () => {
-        const animation = gsap.to(track, {
-          x: () => -getScrollableDistance(),
-          ease: "none",
-          scrollTrigger: {
-            id: "work-horizontal",
-            trigger: section,
-            start: "top top",
-            end: () => `+=${getScrollableDistance()}`,
-            scrub: true,
-            pin: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
+        const getScrollableDistance = () =>
+          Math.max(track.scrollWidth - section.offsetWidth, 0);
+
+        const mm = gsap.matchMedia();
+
+        mmContext = mm.add("(min-width: 1024px)", () => {
+          const animation = gsap.to(track, {
+            x: () => -getScrollableDistance(),
+            ease: "none",
+            scrollTrigger: {
+              id: "work-horizontal",
+              trigger: section,
+              start: "top top",
+              end: () => `+=${getScrollableDistance()}`,
+              scrub: true,
+              pin: true,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+
+          return () => {
+            animation.kill();
+          };
         });
 
-        return () => {
-          animation.kill();
-        };
-      });
+        refreshTimeout = window.setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 150);
+      }, section);
+    };
 
-      const refreshTimeout = window.setTimeout(
-        () => ScrollTrigger.refresh(),
-        150,
-      );
+    void init();
 
-      return () => {
+    return () => {
+      if (refreshTimeout !== undefined) {
         window.clearTimeout(refreshTimeout);
-        mmContext.revert();
-        ScrollTrigger.getById("work-horizontal")?.kill();
-      };
-    }, section);
+      }
 
-    return () => ctx.revert();
+      mmContext?.revert();
+      scrollTriggerInstance?.getById("work-horizontal")?.kill();
+      ctx?.revert();
+    };
   }, []);
 
   return (

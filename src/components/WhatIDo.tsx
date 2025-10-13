@@ -34,18 +34,29 @@ export default function WhatIDo() {
   };
 
   useEffect(() => {
-    if (ScrollTrigger.isTouch) {
-      containerRef.current.forEach((el) => {
-        if (!el) return;
-        const handler = () => handleClick(el);
-        el.addEventListener("click", handler);
-      });
+    if (!ScrollTrigger.isTouch) {
+      return;
     }
+
+    const containers = containerRef.current.filter(
+      (el): el is HTMLDivElement => el !== null,
+    );
+    const handlerMap = new Map<HTMLDivElement, EventListener>();
+
+    containers.forEach((el) => {
+      const handler: EventListener = () => {
+        handleClick(el);
+      };
+      handlerMap.set(el, handler);
+      el.addEventListener("click", handler);
+    });
+
     return () => {
-      containerRef.current.forEach((el) => {
-        if (!el) return;
-        const handler = () => handleClick(el);
-        el.removeEventListener("click", handler);
+      containers.forEach((el) => {
+        const handler = handlerMap.get(el);
+        if (handler) {
+          el.removeEventListener("click", handler);
+        }
       });
     };
   }, []);
