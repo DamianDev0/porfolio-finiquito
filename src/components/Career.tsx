@@ -1,71 +1,46 @@
+"use client";
+
+import { careerData } from "@/data/Career";
+
 const Career = () => {
   return (
-    <div className="section-container relative mx-auto flex flex-col items-center justify-center py-[120px] pb-[120px] opacity-100 mb-[250px] max-[1025px]:mb-0 max-[1025px]:mt-[-200px] max-[1025px]:py-[70px] max-[1025px]:pt-[220px]">
-      <div className="w-full">
-        <h2 className="title mt-12 mb-[90px] text-center text-[70px] font-normal leading-[70px] uppercase tracking-[2px] text-transparent [background:linear-gradient(0deg,#7f40ff,#ffffff)] [background-clip:text] min-[1200px]:text-[70px] max-[1400px]:text-[50px] max-[1400px]:leading-[50px] max-[600px]:w-full max-[600px]:text-[45px] max-[600px]:leading-[45px]">
-          My career <span className="font-light">&</span>
-          <br /> experience
-        </h2>
-        <div className="relative mx-auto flex w-full flex-col gap-[50px]">
-          <div className="absolute left-1/2 top-[-50px] h-full w-[3px] -translate-x-1/2 bg-[linear-gradient(to_top,#aa42ff_20%,var(--accentColor)_50%,transparent_95%)] max-[900px]:left-0">
-            <div className="absolute bottom-0 left-1/2 h-[10px] w-[10px] -translate-x-1/2 translate-y-1/2 rounded-full bg-[#aa42ff] shadow-[0px_0px_5px_2px_#d29bff,0px_0px_15px_8px_#d097ff,0px_0px_110px_20px_#f2c0ff] animate-timeline"></div>
-          </div>
-          <div className="flex flex-col gap-[50px]">
-            <div className="flex justify-between gap-6 max-[900px]:flex-col max-[900px]:gap-[10px]">
-              <div className="flex w-[40%] items-start justify-between gap-[50px] max-[1400px]:w-[45%] max-[1400px]:gap-[20px] max-[900px]:w-full max-[900px]:pl-[10%]">
+    <div className="section-container relative mx-auto flex flex-col items-center justify-center py-[120px] mb-[250px] opacity-100 max-[1025px]:mb-0 max-[1025px]:mt-[-200px] max-[1025px]:py-[70px] max-[1025px]:pt-[220px]">
+      <div className="w-full relative">
+        <div className="absolute left-1/2 top-[180px] bottom-0 w-[1.5px] -translate-x-1/2 bg-gradient-to-t from-[#c873ff]/20 via-[#c873ff]/70 to-transparent rounded-full shadow-[0_0_40px_6px_#c873ff40] max-[900px]:left-[5%]">
+          <div className="absolute bottom-0 left-1/2 h-[14px] w-[14px] -translate-x-1/2 translate-y-1/2 rounded-full bg-[#c873ff] shadow-[0_0_15px_4px_#e1a8ff,0_0_40px_10px_#d89aff,0_0_120px_30px_#f4d0ff] animate-pulse"></div>
+        </div>
+
+        <div className="relative z-10 flex justify-center items-center">
+          <h1 className="text-[45px] font-semibold leading-[50px] tracking-[0.15em] uppercase bg-gradient-to-t from-[#a96dff] to-[#ffffff] bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(200,115,255,0.6)]">
+            Experience
+          </h1>
+        </div>
+
+        <div className="relative mt-[100px] flex flex-col gap-[70px]">
+          {careerData.map((item) => (
+            <div
+              key={`${item.title}-${item.company}-${item.year}`}
+              className="flex justify-between gap-6 max-[900px]:flex-col max-[900px]:gap-[10px]"
+            >
+              <div className="flex w-[40%] items-start justify-between gap-[50px] max-[1400px]:w-[45%] max-[900px]:w-full max-[900px]:pl-[10%]">
                 <div>
-                  <h4 className="m-0 text-[33px] font-medium leading-[30px] tracking-[0.8px] max-[1400px]:text-[22px] max-[1400px]:leading-[24px] max-[1400px]:w-[180px] max-[900px]:w-full">
-                    Position In Company
+                  <h4 className="m-0 text-[33px] font-medium leading-[30px] tracking-[0.8px] text-white max-[1400px]:text-[22px]">
+                    {item.title}
                   </h4>
-                  <h5 className="mt-[10px] text-[20px] font-normal lowercase tracking-[0.7px] text-[var(--accentColor)] max-[1400px]:text-[17px]">
-                    Company Name
+                  <h5 className="mt-[10px] text-[15px] font-normal capitalize tracking-[0.7px] text-[#cd9feb] max-[1400px]:text-[15px]">
+                    {item.company}
                   </h5>
                 </div>
-                <h3 className="m-0 text-[48px] font-medium leading-[45px] max-[1400px]:text-[40px]">20XX</h3>
+                <h3 className="m-0 text-[48px] font-medium leading-[45px] text-[#dba8ff] max-[1400px]:text-[40px]">
+                  {item.year}
+                </h3>
               </div>
-              <p className="m-0 w-[40%] text-[18px] font-light max-[1400px]:w-[45%] max-[1400px]:text-[14px] max-[900px]:w-full max-[900px]:pl-[10%]">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim
-                labore sit non ipsum temporibus quidem, deserunt eaque officiis
-                mollitia ratione suscipit repellat.
+
+              <p className="m-0 w-[40%] text-[18px] font-light text-gray-300 leading-[30px] max-[1400px]:w-[45%] max-[1400px]:text-[14px] max-[900px]:w-full max-[900px]:pl-[10%]">
+                {item.description}
               </p>
             </div>
-            <div className="flex justify-between gap-6 max-[900px]:flex-col max-[900px]:gap-[10px]">
-              <div className="flex w-[40%] items-start justify-between gap-[50px] max-[1400px]:w-[45%] max-[1400px]:gap-[20px] max-[900px]:w-full max-[900px]:pl-[10%]">
-                <div>
-                  <h4 className="m-0 text-[33px] font-medium leading-[30px] tracking-[0.8px] max-[1400px]:text-[22px] max-[1400px]:leading-[24px] max-[1400px]:w-[180px] max-[900px]:w-full">
-                    Position In Company
-                  </h4>
-                  <h5 className="mt-[10px] text-[20px] font-normal lowercase tracking-[0.7px] text-[var(--accentColor)] max-[1400px]:text-[17px]">
-                    Company Name
-                  </h5>
-                </div>
-                <h3 className="m-0 text-[48px] font-medium leading-[45px] max-[1400px]:text-[40px]">20XX</h3>
-              </div>
-              <p className="m-0 w-[40%] text-[18px] font-light max-[1400px]:w-[45%] max-[1400px]:text-[14px] max-[900px]:w-full max-[900px]:pl-[10%]">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim
-                labore sit non ipsum temporibus quidem, deserunt eaque officiis
-                mollitia ratione suscipit repellat.
-              </p>
-            </div>
-            <div className="flex justify-between gap-6 max-[900px]:flex-col max-[900px]:gap-[10px]">
-              <div className="flex w-[40%] items-start justify-between gap-[50px] max-[1400px]:w-[45%] max-[1400px]:gap-[20px] max-[900px]:w-full max-[900px]:pl-[10%]">
-                <div>
-                  <h4 className="m-0 text-[33px] font-medium leading-[30px] tracking-[0.8px] max-[1400px]:text-[22px] max-[1400px]:leading-[24px] max-[1400px]:w-[180px] max-[900px]:w-full">
-                    Position In Company
-                  </h4>
-                  <h5 className="mt-[10px] text-[20px] font-normal lowercase tracking-[0.7px] text-[var(--accentColor)] max-[1400px]:text-[17px]">
-                    Company Name
-                  </h5>
-                </div>
-                <h3 className="m-0 text-[48px] font-medium leading-[45px] max-[1400px]:text-[40px]">NOW</h3>
-              </div>
-              <p className="m-0 w-[40%] text-[18px] font-light max-[1400px]:w-[45%] max-[1400px]:text-[14px] max-[900px]:w-full max-[900px]:pl-[10%]">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim
-                labore sit non ipsum temporibus quidem, deserunt eaque officiis
-                mollitia ratione suscipit repellat.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

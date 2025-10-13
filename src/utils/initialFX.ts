@@ -1,15 +1,18 @@
 "use client";
 
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-export async function initialFX() {
-  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+export function initialFX() {
   ScrollTrigger.killAll();
-
   document.body.style.overflowY = "auto";
   document.querySelector("main")?.classList.add("main-active");
 
-  window.setTimeout(() => {
+  setTimeout(() => {
     ScrollTrigger.refresh();
   }, 100);
 

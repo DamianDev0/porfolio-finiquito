@@ -9,6 +9,7 @@ import SocialIcons from "./SocialIcons";
 import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "../utils/splitText";
+import TechStack from "./TechStack";
 
 
 const MainContainer = () => {
@@ -62,7 +63,7 @@ const MainContainer = () => {
             <Career />
             <Work />
             <Suspense fallback={<div>Loading....</div>}>
-           
+            <TechStack />
             </Suspense>
             <Contact />
           </div>
