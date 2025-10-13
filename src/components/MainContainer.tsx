@@ -1,10 +1,4 @@
-import {
-  lazy,
-  PropsWithChildren,
-  Suspense,
-  useEffect,
-  useState,
-} from "react";
+import {  Suspense, useEffect } from "react";
 import About from "./About";
 import Career from "./Career";
 import Contact from "./Contact";
@@ -16,67 +10,60 @@ import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "../utils/splitText";
 
-const TechStack = lazy(() => import("./TechStack"));
 
-const MainContainer = ({ children }: PropsWithChildren) => {
-  const [isDesktopView, setIsDesktopView] = useState<boolean>(() => {
-    if (typeof window === "undefined") {
-      return true;
-    }
-    return window.innerWidth > 1024;
-  });
-
+const MainContainer = () => {
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
 
+    let scrollTriggerModule: typeof import("gsap/ScrollTrigger") | null = null;
+
+    const loadScrollTrigger = async () => {
+      scrollTriggerModule ??= await import("gsap/ScrollTrigger");
+
+      return scrollTriggerModule.ScrollTrigger;
+    };
+
+    const refreshScrollTrigger = async () => {
+      const ScrollTrigger = await loadScrollTrigger();
+      ScrollTrigger.refresh();
+    };
+
     const resizeHandler = () => {
       setSplitText();
-      setIsDesktopView(window.innerWidth > 1024);
-      
-      // Refresh ScrollTrigger after layout changes
-      const { ScrollTrigger } = require("gsap/ScrollTrigger");
-      setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 100);
+      void refreshScrollTrigger();
     };
-    
+
     resizeHandler();
     window.addEventListener("resize", resizeHandler);
-    
-    // Initial ScrollTrigger refresh after component mount
-    setTimeout(() => {
-      const { ScrollTrigger } = require("gsap/ScrollTrigger");
-      ScrollTrigger.refresh();
+
+    const refreshTimeout = window.setTimeout(() => {
+      void refreshScrollTrigger();
     }, 500);
-    
+
     return () => {
       window.removeEventListener("resize", resizeHandler);
+      window.clearTimeout(refreshTimeout);
     };
   }, []);
-
-  // Remove the immediate setLoading(100) - let the Character component handle loading
 
   return (
     <div className="container-main min-h-[var(--vh)]">
       <Cursor />
       <Navbar />
       <SocialIcons />
-      {isDesktopView && children}
       <div id="smooth-wrapper">
         <div id="smooth-content">
           <div className="container-main">
-            <Landing>{!isDesktopView && children}</Landing>
+            <Landing />
             <About />
             <WhatIDo />
             <Career />
             <Work />
-            {isDesktopView && (
-              <Suspense fallback={<div>Loading....</div>}>
-                <TechStack />
-              </Suspense>
-            )}
+            <Suspense fallback={<div>Loading....</div>}>
+           
+            </Suspense>
             <Contact />
           </div>
         </div>

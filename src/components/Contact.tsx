@@ -58,7 +58,7 @@ const Contact = () => {
           <div className="flex flex-col">
             <h2 className="m-0 text-[23px] font-normal max-[1600px]:text-[20px] max-[1300px]:text-[18px]">
               Designed and Developed <br /> by
-              <span className="text-[var(--accentColor)]"> Moncy Yohannan</span>
+              <span className="text-[var(--accentColor)]"> Damian</span>
             </h2>
             <h5 className="mt-4 flex items-center gap-2 text-[20px] font-medium leading-[20px] opacity-50">
               <span aria-hidden="true">©</span> 2024

@@ -1,43 +1,29 @@
 "use client";
 
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, PropsWithChildren, useContext, useMemo, useState } from "react";
 import Loading from "../components/Loading";
 
 interface LoadingType {
   isLoading: boolean;
   setIsLoading: (state: boolean) => void;
-  setLoading: (percent: number) => void;
 }
 
 export const LoadingContext = createContext<LoadingType | null>(null);
 
 export const LoadingProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [loadingPercent, setLoadingPercent] = useState(0);
-
-  // Create a wrapper function that updates the loading percentage
-  const setLoading = (percent: number) => {
-    setLoadingPercent(percent);
-  };
 
   const value = useMemo(
     () => ({
       isLoading,
       setIsLoading,
-      setLoading,
     }),
     [isLoading]
   );
 
   return (
     <LoadingContext.Provider value={value as LoadingType}>
-      {isLoading && <Loading percent={loadingPercent} />}
+      {isLoading && <Loading />}
       <main className="main-body">{children}</main>
     </LoadingContext.Provider>
   );
