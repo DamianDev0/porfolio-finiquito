@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useState } from "react";
 
 interface Props {
@@ -36,10 +37,12 @@ const WorkImage = (props: Props) => {
             ↗
           </div>
         )}
-        <img
-          alt={props.alt}
+        <Image
+          alt={props.alt ?? "Work Image"}
           className="max-h-[350px] max-w-full max-[900px]:max-h-[250px] max-[650px]:max-h-[200px]"
           src={props.image}
+          width={350}
+          height={350}
         />
         {isVideo && (
           <video

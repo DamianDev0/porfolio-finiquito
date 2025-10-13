@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { EffectComposer, EffectPass, RenderPass, Effect } from 'postprocessing';
@@ -419,7 +420,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
       if (!gl) return;
       const renderer = new THREE.WebGLRenderer({
         canvas,
-        context: gl as WebGL2RenderingContext,
+        context: gl,
         antialias,
         alpha: true
       });
@@ -552,6 +553,14 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
         passive: true
       });
       let raf = 0;
+    
+      function updateEffectUniforms(effs: any[], timeValue: number) {
+        effs.forEach((eff: any) => {
+          const u = eff.uniforms?.get('uTime');
+          if (u) u.value = timeValue;
+        });
+      }
+
       const animate = () => {
         if (autoPauseOffscreen && !visibilityRef.current.visible) {
           raf = requestAnimationFrame(animate);
@@ -563,11 +572,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
           if (touch) touch.update();
           composer.passes.forEach(p => {
             const effs = (p as any).effects;
-            if (effs)
-              effs.forEach((eff: any) => {
-                const u = eff.uniforms?.get('uTime');
-                if (u) u.value = uniforms.uTime.value;
-              });
+            if (effs) updateEffectUniforms(effs, uniforms.uTime.value);
           });
           composer.render();
         } else renderer.render(scene, camera);

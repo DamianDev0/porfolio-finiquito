@@ -135,12 +135,12 @@ export default function WhatIDo() {
 }
 
 type CardProps = {
-  refSetter: (el: HTMLDivElement | null) => void;
-  title: string;
-  description: string;
-  skills: string[];
-  borderTop?: boolean;
-  borderBottom?: boolean;
+  readonly refSetter: (el: HTMLDivElement | null) => void;
+  readonly title: string;
+  readonly description: string;
+  readonly skills: readonly string[];
+  readonly borderTop?: boolean;
+  readonly borderBottom?: boolean;
 };
 
 function Card({
@@ -185,7 +185,7 @@ function Card({
         <div className="flex flex-wrap gap-2">
           {skills.map((skill, i) => (
             <motion.div
-              key={i}
+              key={skill}
               initial={{ scale: 0.8, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.3, delay: i * 0.05 }}
