@@ -1,15 +1,15 @@
-import {  Suspense, useEffect } from "react";
+"use client";
+
+import { useEffect } from "react";
 import About from "./About";
 import Career from "./Career";
 import Contact from "./Contact";
-import Cursor from "./Cursor";
 import Landing from "./Landing";
 import Navbar from "./Navbar";
 import SocialIcons from "./SocialIcons";
 import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "../utils/splitText";
-
 
 const MainContainer = () => {
   useEffect(() => {
@@ -21,7 +21,6 @@ const MainContainer = () => {
 
     const loadScrollTrigger = async () => {
       scrollTriggerModule ??= await import("gsap/ScrollTrigger");
-
       return scrollTriggerModule.ScrollTrigger;
     };
 
@@ -50,7 +49,6 @@ const MainContainer = () => {
 
   return (
     <div className="container-main min-h-[var(--vh)]">
-      <Cursor />
       <Navbar />
       <SocialIcons />
       <div id="smooth-wrapper">
@@ -61,9 +59,6 @@ const MainContainer = () => {
             <WhatIDo />
             <Career />
             <Work />
-            <Suspense fallback={<div>Loading....</div>}>
-           
-            </Suspense>
             <Contact />
           </div>
         </div>

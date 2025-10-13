@@ -1,6 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import PixelBlast from "./PixelBlast";
+
+const CharacterModel = dynamic(() => import("./Character"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const Landing = () => {
   return (
@@ -8,7 +14,7 @@ const Landing = () => {
       id="landingDiv"
       className="relative mx-auto flex h-[var(--vh)] w-full max-w-[var(--cMaxWidth)] items-center overflow-hidden"
     >
-      <div className="absolute inset-0 w-full h-full">
+      <div className="absolute inset-0 h-full w-full">
         <PixelBlast
           variant="circle"
           pixelSize={6}
@@ -27,8 +33,12 @@ const Landing = () => {
           speed={0.6}
           edgeFade={0.25}
           transparent
-          className="w-full h-full"
+          className="h-full w-full"
         />
+      </div>
+
+      <div className="absolute inset-0 flex items-center justify-center">
+        <CharacterModel />
       </div>
 
       <div className="relative z-10 mx-auto flex h-full w-[var(--cWidth)] max-w-[var(--cMaxWidth)] flex-col justify-between px-6 py-16 text-white md:flex-row md:items-center md:py-24">

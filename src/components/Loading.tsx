@@ -6,31 +6,30 @@ import Marquee from "react-fast-marquee";
 import { useLoading } from "@/contexts/LoadingProvider";
 
 const Loading = () => {
-  const { setIsLoading } = useLoading();
+  const { progress, setIsLoading, setProgress } = useLoading();
   const [isLoaded, setIsLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const [progress, setProgressState] = useState<number>(0);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
-      setProgressState((prev) => {
-        if (prev >= 100) {
-          window.clearInterval(interval);
-          return 100;
+      setProgress((previous) => {
+        if (previous >= 95) {
+          return previous;
         }
 
-        const next = Math.min(prev + Math.random() * 18 + 6, 100);
-        if (next >= 100) {
-          window.clearInterval(interval);
-        }
-        return Math.floor(next);
+        const increment = previous + Math.random() * 18 + 6;
+        return Math.min(increment, 95);
       });
     }, 220);
 
     return () => {
       window.clearInterval(interval);
     };
-  }, []);
+  }, [setProgress]);
+
+  useEffect(() => {
+    setProgress(0);
+  }, [setProgress]);
 
   useEffect(() => {
     if (progress >= 100) {
@@ -104,7 +103,7 @@ const Loading = () => {
             <div className="flex w-[300px] items-center justify-between rounded-full bg-black px-8 py-4 text-white">
               <span className="text-sm font-semibold tracking-wide text-white/90">LOADING</span>
               <div className="flex items-center gap-2 text-sm">
-                <span className="font-medium text-white">{progress}%</span>
+                <span className="font-medium text-white">{Math.round(progress)}%</span>
                 <div className="h-[20px] w-[8px] rounded-[2px] bg-gradient-to-b from-white via-white/90 to-white/70"></div>
               </div>
             </div>
