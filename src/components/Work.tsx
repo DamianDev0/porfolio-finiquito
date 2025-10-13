@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import WorkImage from "./WorkImage";
@@ -47,13 +47,16 @@ const WORK_ITEMS: WorkItem[] = [
 ];
 
 const Work = () => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
 
-    const section = document.querySelector<HTMLElement>("[data-work-section]");
-    const track = section?.querySelector<HTMLElement>("[data-work-track]");
+    const section = sectionRef.current;
+    const track = trackRef.current;
 
     if (!section || !track) {
       return;
@@ -62,13 +65,15 @@ const Work = () => {
     const ctx = gsap.context(() => {
       gsap.set(track, { x: 0 });
 
-      const getScrollableDistance = () =>
-        Math.max(track.scrollWidth - section.offsetWidth, 0);
+      const getScrollableDistance = () => {
+        const sectionWidth = section.clientWidth;
+        const trackWidth = track.scrollWidth;
 
-      const mm = gsap.matchMedia();
+        return trackWidth > sectionWidth ? trackWidth - sectionWidth : 0;
+      };
 
-      const mmContext = mm.add("(min-width: 1024px)", () => {
-        const animation = gsap.to(track, {
+      const setupAnimation = () =>
+        gsap.to(track, {
           x: () => -getScrollableDistance(),
           ease: "none",
           scrollTrigger: {
@@ -83,10 +88,25 @@ const Work = () => {
           },
         });
 
+      const mm = gsap.matchMedia();
+
+      const mmContext = mm.add("(min-width: 1024px)", () => {
+        const animation = setupAnimation();
+
         return () => {
           animation.kill();
         };
       });
+
+      const resizeObserver =
+        typeof ResizeObserver !== "undefined"
+          ? new ResizeObserver(() => {
+              ScrollTrigger.refresh();
+            })
+          : null;
+
+      resizeObserver?.observe(section);
+      resizeObserver?.observe(track);
 
       const refreshTimeout = window.setTimeout(
         () => ScrollTrigger.refresh(),
@@ -94,8 +114,10 @@ const Work = () => {
       );
 
       return () => {
+        resizeObserver?.disconnect();
         window.clearTimeout(refreshTimeout);
         mmContext.revert();
+        mm.kill();
         ScrollTrigger.getById("work-horizontal")?.kill();
       };
     }, section);
@@ -107,6 +129,7 @@ const Work = () => {
     <section
       className="work-section relative min-h-[var(--vh)] w-full overflow-hidden"
       data-work-section
+      ref={sectionRef}
       id="work"
     >
       <div
@@ -119,6 +142,7 @@ const Work = () => {
         <div
           className="work-flex relative mt-12 flex min-h-[60vh] w-full gap-0 pr-[120px] before:absolute before:left-1/2 before:top-0 before:h-px before:w-[50000vw] before:-translate-x-1/2 before:bg-[#363636] after:absolute after:left-1/2 after:top-full after:h-px after:w-[50000vw] after:-translate-x-1/2 after:bg-[#363636] max-[1400px]:pr-[45px] max-[1024px]:flex-col max-[1024px]:gap-12"
           data-work-track
+          ref={trackRef}
         >
           {WORK_ITEMS.map((item, index) => {
             const itemNumber = String(index + 1).padStart(2, "0");
