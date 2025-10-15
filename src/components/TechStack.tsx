@@ -149,9 +149,13 @@ export default function TechStack() {
       id="techstack"
       className="relative w-full h-[100vh] bg-[#0b080c] flex flex-col items-center justify-center overflow-hidden"
     >
-      <h2 className="absolute top-12 text-4xl md:text-5xl font-semibold text-white tracking-[0.15em] z-10">
-        MY TECHSTACK
+      <h2 className="absolute top-12 text-4xl md:text-5xl font-semibold tracking-[0.15em] z-10 text-white">
+        MY{" "}
+        <span className="bg-gradient-to-t from-[#b87fff] to-[#ffffff] bg-clip-text text-transparent">
+          TECHSTACK
+        </span>
       </h2>
+
       <Canvas
         shadows
         gl={{ alpha: true, antialias: true }}
