@@ -33,22 +33,26 @@ export default function WhatIDo() {
     containerRef.current[i] = el;
   };
 
-  useEffect(() => {
-    if (ScrollTrigger.isTouch) {
-      containerRef.current.forEach((el) => {
-        if (!el) return;
-        const handler = () => handleClick(el);
-        el.addEventListener("click", handler);
-      });
-    }
-    return () => {
-      containerRef.current.forEach((el) => {
-        if (!el) return;
-        const handler = () => handleClick(el);
-        el.removeEventListener("click", handler);
-      });
-    };
-  }, []);
+useEffect(() => {
+  const refs = [...containerRef.current];
+
+  if (ScrollTrigger.isTouch) {
+    refs.forEach((el) => {
+      if (!el) return;
+      const handler = () => handleClick(el);
+      el.addEventListener("click", handler);
+    });
+  }
+
+  return () => {
+    refs.forEach((el) => {
+      if (!el) return;
+      const handler = () => handleClick(el);
+      el.removeEventListener("click", handler);
+    });
+  };
+}, []);
+
 
   return (
     <section className="flex flex-col lg:flex-row items-center justify-center min-h-screen py-24 text-white">

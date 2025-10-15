@@ -37,12 +37,13 @@ const About = () => {
           </h3>
         </div>
 
-        <p className="text-md leading-6 font-extralight text-white/80 ml-4">
-          I'm a multidisciplinary developer passionate about crafting immersive
-          digital experiences through code and design. I focus on modern
-          technologies, performance, and user-centered interfaces to turn
-          complex ideas into simple, elegant, and meaningful products.
-        </p>
+     <p className="text-md leading-6 font-extralight text-white/80 ml-4">
+  I&apos;m a multidisciplinary developer passionate about crafting immersive
+  digital experiences through code and design. I focus on modern
+  technologies, performance, and user-centered interfaces to turn
+  complex ideas into simple, elegant, and meaningful products.
+</p>
+
       </div>
     </section>
   );
