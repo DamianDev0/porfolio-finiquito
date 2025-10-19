@@ -18,31 +18,79 @@ const Work = () => {
     const track = trackRef.current;
     if (!section || !track) return;
 
-    gsap.set(track, { x: 0 });
-    ScrollTrigger.killAll();
+    const ctx = gsap.context(() => {
+      gsap.set(track, { x: 0 });
 
-    const distance = track.scrollWidth - section.clientWidth;
+      const horizontalTween = gsap.to(track, {
+        x: () => {
+          const totalWidth = track.scrollWidth - section.clientWidth;
+          return totalWidth > 0 ? -totalWidth : 0;
+        },
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => {
+            const totalWidth = track.scrollWidth - section.clientWidth;
+            return `+=${totalWidth > 0 ? totalWidth : section.clientHeight}`;
+          },
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
 
-    gsap.to(track, {
-      x: -distance,
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        start: "top top",
-        end: `+=${distance}`,
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
+      const title = section.querySelector<HTMLElement>("[data-work-title]");
+      if (title) {
+        gsap.fromTo(
+          title,
+          { autoAlpha: 0, y: 40 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
 
-    const refreshHandler = () => ScrollTrigger.refresh();
-    window.addEventListener("resize", refreshHandler);
+      gsap.utils
+        .toArray<HTMLElement>(section.querySelectorAll("[data-work-item]"))
+        .forEach((panel, index) => {
+          gsap.fromTo(
+            panel,
+            { autoAlpha: 0, y: 80 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.8,
+              delay: index === 0 ? 0.1 : 0,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: panel,
+                containerAnimation: horizontalTween,
+                start: "left center",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        });
+
+      ScrollTrigger.refresh();
+    }, section);
+
+    const resizeHandler = () => ScrollTrigger.refresh();
+    window.addEventListener("resize", resizeHandler);
 
     return () => {
-      window.removeEventListener("resize", refreshHandler);
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      window.removeEventListener("resize", resizeHandler);
+      ctx.revert();
     };
   }, []);
 
@@ -55,7 +103,7 @@ const Work = () => {
       <div className="absolute left-[10%] top-1/2 h-[300px] w-[280px] -translate-y-1/2 rounded-full bg-[#c873ff]/25 blur-[140px]" />
       <div className="absolute right-[10%] top-[200px] h-[200px] w-[200px] rounded-full bg-[#b87fff]/25 blur-[120px]" />
 
-      <div className="px-8 pt-24 pb-16">
+      <div className="px-8 pt-24 pb-16" data-work-title>
         <TextPressure
           text="MY WORK"
           flex
@@ -73,6 +121,7 @@ const Work = () => {
         {WORK_ITEMS.map((item, i) => (
           <article
             key={item.title}
+            data-work-item
             className="flex w-[90vw] md:w-[600px] shrink-0 flex-col gap-8 border-r border-[#2a2a2a] p-10 even:flex-col-reverse"
           >
             <div>
