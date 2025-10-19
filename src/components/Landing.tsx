@@ -11,7 +11,7 @@ const Landing = () => {
       <div className="absolute inset-0 w-full h-full">
         <PixelBlast
           variant="circle"
-          pixelSize={6}
+          pixelSize={5}
           color="#B19EEF"
           patternScale={3}
           patternDensity={1.2}
@@ -43,7 +43,7 @@ const Landing = () => {
             data-hero-animate
             className="mt-3 text-4xl font-semibold tracking-tight leading-[1.05] min-[500px]:text-5xl min-[768px]:text-6xl"
           >
-            Damian
+            Damian{" "}
             <span className="mt-1 block text-lg font-normal uppercase tracking-[0.6rem] text-white/60 min-[500px]:text-xl min-[768px]:text-2xl">
               Creative Developer
             </span>

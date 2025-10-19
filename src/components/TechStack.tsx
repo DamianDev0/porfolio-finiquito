@@ -12,6 +12,7 @@ import {
   CylinderCollider,
   RapierRigidBody,
 } from "@react-three/rapier";
+import TextPressure from "./TextPressure";
 
 const textureLoader = new THREE.TextureLoader();
 const imageUrls = [
@@ -149,12 +150,24 @@ export default function TechStack() {
       id="techstack"
       className="relative w-full h-[100vh] bg-[#0b080c] flex flex-col items-center justify-center overflow-hidden"
     >
-      <h2 className="absolute top-12 text-4xl md:text-5xl font-semibold tracking-[0.15em] z-10 text-white">
-        MY{" "}
-        <span className="bg-gradient-to-t from-[#b87fff] to-[#ffffff] bg-clip-text text-transparent">
-          TECHSTACK
-        </span>
-      </h2>
+       <div className="relative z-10 mt-12 w-full text-left min-[768px]:max-w-[800px] min-[1025px]:max-w-[680px] min-[1025px]:w-1/2 min-[1025px]:pl-[6%]">
+        <div className="mx-auto w-[var(--cWidth)] py-4">
+          <TextPressure
+            text="MY TECHSTACK"
+            flex={true}
+            alpha={false}
+            stroke={false}
+            width={true}
+            weight={true}
+            italic={true}
+            textColor="#c481ff"
+            strokeColor="#ff0000"
+            minFontSize={35}
+          />
+        </div>
+
+      
+      </div>
 
       <Canvas
         shadows

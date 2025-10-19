@@ -28,6 +28,10 @@
     --cMaxWidth: 1920px;
   }
 
+
+  html, body { overflow-x: hidden; } /* evita scroll lateral nativo del body */
+#work { isolation: isolate; }      /* stacking context limpio para pin */
+
   body {
     margin: 0;
     min-height: var(--vh);

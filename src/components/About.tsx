@@ -1,6 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Title from "./ui/title";
+import TextPressure from "./TextPressure";
 
 const Spline = dynamic(
   () => import("@splinetool/react-spline").then((m) => m.default),
@@ -29,21 +31,26 @@ const About = () => {
 
       <div className="relative z-10 mt-12 w-full text-left min-[768px]:max-w-[600px] min-[1025px]:max-w-[680px] min-[1025px]:w-1/2 min-[1025px]:pl-[6%]">
         <div className="mx-auto w-[var(--cWidth)] py-4">
-          <h3 className="text-[55px] font-semibold uppercase tracking-tight text-white max-[1400px]:text-[50px] max-[900px]:text-[40px]">
-            About{" "}
-            <span className="bg-gradient-to-t from-[#b87fff] to-[#ffffff] bg-clip-text text-transparent">
-              Me
-            </span>
-          </h3>
+          <TextPressure
+            text="ABOUT ME"
+            flex={true}
+            alpha={false}
+            stroke={false}
+            width={true}
+            weight={true}
+            italic={true}
+            textColor="#c481ff"
+            strokeColor="#ff0000"
+            minFontSize={35}
+          />
         </div>
 
-     <p className="text-md leading-6 font-extralight text-white/80 ml-4">
-  I&apos;m a multidisciplinary developer passionate about crafting immersive
-  digital experiences through code and design. I focus on modern
-  technologies, performance, and user-centered interfaces to turn
-  complex ideas into simple, elegant, and meaningful products.
-</p>
-
+        <p className="text-md leading-6 font-extralight text-white/80 ml-4">
+          I&apos;m a multidisciplinary developer passionate about crafting
+          immersive digital experiences through code and design. I focus on
+          modern technologies, performance, and user-centered interfaces to turn
+          complex ideas into simple, elegant, and meaningful products.
+        </p>
       </div>
     </section>
   );

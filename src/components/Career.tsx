@@ -1,6 +1,7 @@
 "use client";
 
 import { careerData } from "@/data/Career";
+import TextPressure from "./TextPressure";
 
 const Career = () => {
   return (
@@ -10,13 +11,20 @@ const Career = () => {
           <div className="absolute bottom-0 left-1/2 h-[14px] w-[14px] -translate-x-1/2 translate-y-1/2 rounded-full bg-[#c873ff] shadow-[0_0_25px_8px_#d9a9ff,0_0_60px_20px_#f1d6ff] animate-pulse"></div>
         </div>
 
-        <div className="relative z-10 flex flex-col items-center justify-center text-center mb-[100px]">
-          <h2 className="text-[60px] font-semibold leading-[1.1] uppercase tracking-[0.05em] text-white to-[#ffffff] bg-clip-text drop-shadow-[0_0_12px_rgba(200,115,255,0.4)] max-[1200px]:text-[58px] max-[900px]:text-[46px] max-[600px]:text-[36px]">
-            My Career &
-          </h2>
-          <h2 className="text-[50px] font-semibold leading-[1.1] uppercase tracking-[0.05em] bg-gradient-to-t from-[#b87fff] to-[#ffffff] bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(200,115,255,0.4)] max-[1200px]:text-[58px] max-[900px]:text-[46px] max-[600px]:text-[36px]">
-            Experience
-          </h2>
+        <div className="w-full mx-auto pt-4 pb-20 relative z-10 flex items-center justify-start">
+          <TextPressure
+            text="MY EXPERIENCE & CARRER"
+            flex={true}
+            alpha={false}
+            stroke={false}
+            width={true}
+            weight={true}
+            italic={true}
+            textColor="#c481ff"
+            strokeColor="#ff0000"
+            minFontSize={35}
+            className="pb-7"
+          />
         </div>
 
         <div className="relative flex flex-col gap-[70px]">
@@ -27,7 +35,7 @@ const Career = () => {
             >
               <div className="flex w-[40%] items-start justify-between gap-[50px] max-[1400px]:w-[45%] max-[900px]:w-full max-[900px]:pl-[10%]">
                 <div>
-                  <h4 className="m-0 text-[33px] font-medium leading-[30px] tracking-[0.8px] text-white max-[1400px]:text-[22px]">
+                  <h4 className="m-0 text-[35px] font-semibold leading-[30px] tracking-[0.7px] text-white max-[1400px]:text-[28px]">
                     {item.title}
                   </h4>
                   <h5 className="mt-[10px] text-[15px] font-normal capitalize tracking-[0.7px] text-[#cd9feb] max-[1400px]:text-[15px]">

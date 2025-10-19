@@ -4,123 +4,45 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import WorkImage from "./WorkImage";
+import TextPressure from "./TextPressure";
+import { WORK_ITEMS } from "@/data/Work";
 
 gsap.registerPlugin(ScrollTrigger);
-
-type WorkItem = {
-  title: string;
-  category: string;
-  tools: string;
-  image: string;
-  link?: string;
-};
-
-const WORK_ITEMS: WorkItem[] = [
-  {
-    title: "Crm Platform",
-    category: "Fintech Experience",
-    tools: "Next.js · TypeScript · NestJS · Redux · Tailwind CSS",
-    image: "/images/projects/charge.png",
-  },
-  {
-    title: "Creative Studio Site",
-    category: "Web Design",
-    tools: "React · GSAP · Headless CMS",
-    image: "/images/projects/locksmith.png",
-  },
-  {
-    title: "Immersive Product Tour",
-    category: "Interactive Experience",
-    tools: "Three.js · React · Motion",
-    image: "/images/projects/rythym.png",
-  },
-  {
-    title: "SaaS Analytics Dashboard",
-    category: "Product Design",
-    tools: "Next.js · Radix UI · Recharts",
-    image: "/images/projects/smart.png",
-  },
-  {
-    title: "Portfolio Generator",
-    category: "Side Project",
-    tools: "TypeScript · Tailwind CSS · Vite",
-    image: "/images/projects/wallet.png",
-  },
-];
 
 const Work = () => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     const track = trackRef.current;
     if (!section || !track) return;
 
-    let horizontalScroll: gsap.core.Tween | null = null;
+    gsap.set(track, { x: 0 });
+    ScrollTrigger.killAll();
 
-    const setupScrollTrigger = () => {
-      if (horizontalScroll) horizontalScroll.kill();
-      ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.vars.trigger === section) trigger.kill();
-      });
+    const distance = track.scrollWidth - section.clientWidth;
 
-      gsap.set(track, { x: 0 });
-      const isDesktop = window.innerWidth > 1024;
-
-      if (isDesktop) {
-        const getDistance = () => {
-          const trackWidth = track.scrollWidth;
-          const sectionWidth = section.clientWidth;
-          return Math.max(0, trackWidth - sectionWidth);
-        };
-
-        const distance = getDistance();
-
-        if (distance > 0) {
-          horizontalScroll = gsap.to(track, {
-            x: -distance,
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: `+=${distance}`,
-              scrub: 1,
-              pin: true,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-            },
-          });
-        }
-      }
-    };
-
-    setupScrollTrigger();
-
-    const ro = new ResizeObserver(() => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => setupScrollTrigger(), 100);
+    gsap.to(track, {
+      x: -distance,
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: `+=${distance}`,
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      },
     });
 
-    ro.observe(section);
-    ro.observe(track);
-
-    const handleResize = () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => setupScrollTrigger(), 150);
-    };
-
-    window.addEventListener("resize", handleResize);
+    const refreshHandler = () => ScrollTrigger.refresh();
+    window.addEventListener("resize", refreshHandler);
 
     return () => {
-      if (horizontalScroll) horizontalScroll.kill();
-      ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.vars.trigger === section) trigger.kill();
-      });
-      ro.disconnect();
-      window.removeEventListener("resize", handleResize);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      window.removeEventListener("resize", refreshHandler);
+      ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
 
@@ -128,60 +50,55 @@ const Work = () => {
     <section
       ref={sectionRef}
       id="work"
-      className="relative w-full min-h-[100vh] overflow-hidden bg-[#0b080c] text-white"
+      className="relative w-full min-h-screen overflow-hidden bg-[#0b080c] text-white"
     >
-      <div className="absolute left-[8%] top-[50%] h-[350px] w-[320px] -translate-y-1/2 rounded-full bg-[#c873ff]/25 blur-[140px] pointer-events-none" />
-      <div className="absolute right-[15%] top-[160px] h-[220px] w-[220px] rounded-full bg-[#b87fff]/25 blur-[120px] pointer-events-none" />
+      <div className="absolute left-[10%] top-1/2 h-[300px] w-[280px] -translate-y-1/2 rounded-full bg-[#c873ff]/25 blur-[140px]" />
+      <div className="absolute right-[10%] top-[200px] h-[200px] w-[200px] rounded-full bg-[#b87fff]/25 blur-[120px]" />
 
-      <div className="mx-auto w-[var(--cWidth)] pt-16 pb-20 relative z-10 flex items-center justify-start">
-        <h2 className="text-[55px] ml-5 font-semibold uppercase tracking-tight max-[1400px]:text-[45px] max-[900px]:text-[36px] max-[640px]:text-[30px] text-white">
-          My{" "}
-          <span className="bg-gradient-to-t from-[#b87fff] to-[#ffffff] bg-clip-text text-transparent">
-            Work
-          </span>
-        </h2>
+      <div className="px-8 pt-24 pb-16">
+        <TextPressure
+          text="MY WORK"
+          flex
+          alpha
+          stroke={false}
+          width
+          weight
+          italic
+          textColor="#c481ff"
+          minFontSize={28}
+        />
       </div>
 
-      <div
-        ref={trackRef}
-        className="flex w-fit gap-0 pr-[120px] relative z-10 max-[1024px]:flex-col max-[1024px]:gap-12 max-[1024px]:w-full max-[1024px]:pr-0"
-      >
-        {WORK_ITEMS.map((item, index) => {
-          const itemNumber = String(index + 1).padStart(2, "0");
-          return (
-            <article
-              key={item.title}
-              className="flex w-[600px] shrink-0 flex-col gap-8 border-r border-[#363636] p-12 even:flex-col-reverse 
-              max-[1400px]:w-[420px] max-[1400px]:p-8 
-              max-[1024px]:w-full max-[1024px]:border-r-0 max-[1024px]:border-b max-[1024px]:border-[#363636] max-[1024px]:last:border-b-0"
-            >
-              <div className="flex flex-col gap-4">
-                <div className="flex items-start justify-between max-[640px]:flex-col max-[640px]:gap-2">
-                  <h3 className="text-[50px] font-bold leading-[50px] max-[1400px]:text-[36px] max-[900px]:text-[30px] max-[640px]:text-[26px]">
-                    {itemNumber}
-                  </h3>
-                  <div className="text-right max-[640px]:text-left">
-                    <h4 className="text-[24px] font-semibold uppercase tracking-wide max-[900px]:text-[18px] max-[640px]:text-[16px]">
-                      {item.title}
-                    </h4>
-                    <p className="text-sm uppercase tracking-[2px] text-[#adacac] max-[640px]:text-[12px]">
-                      {item.category}
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-1">
-                  <h4 className="text-[16px] font-medium uppercase tracking-[2px] text-white/70 max-[640px]:text-[13px]">
-                    Herramientas y focos
+      <div ref={trackRef} className="flex w-fit gap-0 relative z-10">
+        {WORK_ITEMS.map((item, i) => (
+          <article
+            key={item.title}
+            className="flex w-[90vw] md:w-[600px] shrink-0 flex-col gap-8 border-r border-[#2a2a2a] p-10 even:flex-col-reverse"
+          >
+            <div>
+              <div className="flex items-start justify-between mb-3 max-[640px]:flex-col max-[640px]:gap-1">
+                <h3 className="text-4xl font-bold">
+                  {String(i + 1).padStart(2, "0")}
+                </h3>
+                <div className="text-right max-[640px]:text-left">
+                  <h4 className="text-lg font-semibold uppercase">
+                    {item.title}
                   </h4>
-                  <p className="mt-1 text-sm font-light text-[#adacac] max-[640px]:text-[12px]">
-                    {item.tools}
+                  <p className="text-xs uppercase text-[#adacac]">
+                    {item.category}
                   </p>
                 </div>
               </div>
-              <WorkImage alt={item.title} image={item.image} link={item.link} />
-            </article>
-          );
-        })}
+              <div>
+                <h5 className="text-sm uppercase text-white/70">
+                  Herramientas y focos
+                </h5>
+                <p className="text-xs text-[#adacac]">{item.tools}</p>
+              </div>
+            </div>
+            <WorkImage alt={item.title} image={item.image} link={item.link} />
+          </article>
+        ))}
       </div>
     </section>
   );

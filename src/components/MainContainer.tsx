@@ -1,4 +1,4 @@
-import {  Suspense, useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import About from "./About";
 import Career from "./Career";
 import Contact from "./Contact";
@@ -10,7 +10,7 @@ import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "../utils/splitText";
 import TechStack from "./TechStack";
-
+import MagicBento from "./MagicBento";
 
 const MainContainer = () => {
   useEffect(() => {
@@ -61,9 +61,25 @@ const MainContainer = () => {
             <About />
             <WhatIDo />
             <Career />
+
+            <div className="w-full flex justify-center items-center">
+              <MagicBento
+                textAutoHide
+                enableStars
+                enableSpotlight
+                enableBorderGlow
+                enableTilt
+                enableMagnetism
+                clickEffect
+                spotlightRadius={400}
+                particleCount={14}
+                glowColor="132, 0, 255"
+              />
+            </div>
+
             <Work />
             <Suspense fallback={<div>Loading....</div>}>
-            <TechStack />
+              <TechStack />
             </Suspense>
             <Contact />
           </div>
